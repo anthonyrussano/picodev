@@ -2,10 +2,10 @@ import network
 import socket
 import time
 from machine import Pin
+from vars import SSID, PASSWORD
 
-# Constants
-SSID = 'your_ssid'
-PASSWORD = 'your_password'
+ssid = SSID
+password = PASSWORD
 LED_PIN = 15
 
 def initialize_led(pin_number):
@@ -53,6 +53,7 @@ def handle_client(cl, addr):
     cl.close()
 
 # Main Program
+# Main Program
 if __name__ == '__main__':
     led = initialize_led(LED_PIN)
     wlan = initialize_wifi(SSID, PASSWORD)
@@ -64,8 +65,18 @@ if __name__ == '__main__':
 
     server_socket = create_server()
 
+    led_toggle_time = time.time()  # Initialize time counter for LED toggle
+    led_state = False  # LED initial state
+
     while True:
         try:
+            # Toggle LED every 30 seconds
+            if time.time() - led_toggle_time >= 30:
+                led_state = not led_state  # Invert LED state
+                led.value(led_state)
+                led_toggle_time = time.time()  # Reset time counter
+
+            # Check for incoming client connections
             client_socket, client_addr = server_socket.accept()
             handle_client(client_socket, client_addr)
         except OSError as e:
