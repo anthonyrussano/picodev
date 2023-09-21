@@ -66,15 +66,15 @@ while True:
         # Extract message from POST data
         match = ure.search("message=(.+?) ", request)
         if match:
-            message = match.group(1).replace('+', ' ')
+            message = match.group(1).replace('+', ' ').replace('%20', ' ')
             messages.append(message)
 
         # Create response
         message_list = "".join(["<li>{}</li>".format(m) for m in messages])
         response = html % message_list
+        full_response = "HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n" + response
 
-        cl.send("HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n")
-        cl.send(response)
+        cl.send(full_response)
         cl.close()
 
     except OSError as e:
