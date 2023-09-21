@@ -3,6 +3,7 @@ import socket
 import time
 from vars import SSID, PASSWORD
 from machine import Pin
+import urllib.parse  # For URL decoding
 
 led = Pin(15, Pin.OUT)
 
@@ -60,13 +61,14 @@ while True:
         cl, addr = s.accept()
         print("client connected from", addr)
         request = cl.recv(1024)
-        request = str(request)
+        request = str(request, 'utf-8')
 
         if "POST" in request:
-            start_idx = request.find("text=") + 5
-            end_idx = request.find(" HTTP/1.1")
-            new_text = request[start_idx:end_idx]
-            new_text = new_text.replace("+", " ")
+            # Locate and decode the text
+            marker = "\r\n\r\n"
+            post_data_start = request.find(marker) + len(marker)
+            post_data = request[post_data_start:]
+            new_text = urllib.parse.unquote_plus(post_data[5:])
             text_file_content = new_text
 
         response = html_template.format(text_file_content)
