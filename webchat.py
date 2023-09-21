@@ -33,10 +33,13 @@ html_template = """<!DOCTYPE html>
         <title>Pico Editor</title> 
         <script type="text/javascript">
             function fetchUpdates(){
-                fetch('/fetch').then(response => response.text()).then(data => {
-                    document.getElementById("editor").value = data;
-                });
-            }
+                fetch('/fetch')
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById("editor").value = data;
+                        })
+                    .catch((error) => console.error('Fetch error:', error));
+                        }
             setInterval(fetchUpdates, 2000);  // Fetch updates every 2 seconds
         </script>
     </head>
