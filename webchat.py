@@ -1,13 +1,13 @@
 import network
 import socket
 import time
-
+from vars import SSID, PASSWORD
 from machine import Pin
 
-# Initialize the LED and WLAN
 led = Pin(15, Pin.OUT)
-ssid = ""
-password = ""
+
+ssid = SSID
+password = PASSWORD
 
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
