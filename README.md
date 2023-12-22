@@ -1,0 +1,2 @@
+- pipenv run rshell --baud 460800 -p /dev/ttyACM0
+- pipenv run rshell --baud 921600 -p /dev/ttyACM0
